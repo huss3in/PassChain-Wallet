@@ -10,4 +10,9 @@ export class SignupPage {
   constructor(public navCtrl: NavController) {
 
   }
+  
+  newUser = {}
+  logForm() {
+    console.log(this.newUser)
+  }
 }

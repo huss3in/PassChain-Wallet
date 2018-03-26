@@ -1,15 +1,16 @@
-<ion-header>
-    <ion-navbar>
-        <ion-title>Signup</ion-title>
-    </ion-navbar>
-</ion-header>
+<form (ngSubmit)="logForm()">
+    <ion-item>
+        <ion-label fixed>Username</ion-label>
+        <ion-input [(ngModel)]="newUser.username" type="text" name="username" value=""></ion-input>
+    </ion-item>
 
-<ion-content padding>
-    <h2>Welcome Signup!</h2>
-    <p>
-        This starter project comes with simple tabs-based layout for apps that are going to primarily use a Tabbed UI.
-    </p>
-    <p>
-        Take a look at the <code>src/pages/</code> directory to add or change tabs, update any existing page or create new pages.
-    </p>
-</ion-content>
+    <ion-item>
+        <ion-label fixed>Password</ion-label>
+        <ion-input [(ngModel)]="newUser.password" type="password" name="password"></ion-input>
+    </ion-item>
+    <div class="row">
+        <div class="col">
+            <button ion-button block>Signup</button>
+        </div>
+    </div>
+</form>
