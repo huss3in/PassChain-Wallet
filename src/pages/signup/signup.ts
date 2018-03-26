@@ -30,14 +30,11 @@ export class SignupPage {
   }
 
   logForm() {
-    console.log(this.newUser);
-    console.log(this.storage)
     this.generateKePair().then((keyPair)=>{
-      console.log(keyPair)
       this.storage.set('publicKey', keyPair.publicKey);
       this.storage.set('privateKey', keyPair.privateKey);
       this.storage.get('publicKey').then((val) => {
-        console.log('Your age is', val);
+        console.log(val);
       });
     })
     
