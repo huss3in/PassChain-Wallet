@@ -1,16 +1,26 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import Web3 from 'web3'
-
+import Tx from 'ethereumjs-tx'
+declare const Buffer
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
 })
 export class HomePage {
 
+
+  sendSigned(txData, privateKey, web3, cb) {
+    console.log('in ggggg')
+    privateKey = new Buffer(privateKey, 'hex')
+    const transaction = new Tx(txData)
+    transaction.sign(privateKey)
+    const serializedTx = transaction.serialize().toString('hex')
+    web3.eth.sendSignedTransaction('0x' + serializedTx, cb)
+  }
+
   constructor(public navCtrl: NavController) {
-    var web3 = new Web3();
-    web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/L5M3mbo9rfzND7URRini'));
+    let web3 = new Web3(new Web3.providers.HttpProvider('https://ropsten.infura.io/L5M3mbo9rfzND7URRini'));
 
     // Define the ABI of the contract, used to return the desired values
     var abi = [
@@ -117,7 +127,7 @@ export class HomePage {
       }
     ]
     // The Ethereum address of the smart contract
-    var addr = "0x7c9efc8913de99800bb649cc094d834537bbbcda";
+    var addr = "0x0e6b7b7ab6dff469b83fe6a87c857b158b9e2542";
 
     // Build a new variable based on the web3 API including the ABI and address of the contract
     var EbolaContract = new web3.eth.Contract(abi, addr);
@@ -127,22 +137,41 @@ export class HomePage {
     //EbolaContract.methods.getPasses().call().then(console.log);
 
     // create account
-    let account = web3.eth.accounts.create("mohammed1")
-    console.log("kkkkk")
-    console.log(account)
-    web3.eth.personal.unlockAccount(account.address, account.privateKey)
-      .then((response) => {
-        console.log('unloc succc')
-        console.log(response);
-      }).catch((error) => {
-        console.log('unlocerrr')
-        console.log(error);
-      });
-    /* EbolaContract.methods.addPass("0x7465737400000000000000000000000000000000000000000000000000000000", "0x6dc868f1cf4f32b10271b167b9a0f399c954c1f1").call().then(console.log);
-    EbolaContract.methods.getPasses().call().then(function (res) {
+    //let account = web3.eth.accounts.create("mohammed1")
+    let account = {
+      publicKey: '0xac7198859416d238ee5547a4486712bf6c26bf8b',
+      privateKey: 'ED126374E49881BD7FB7BE98A25DA53475C81C56639F0429435EE88F1E58FDAB'
+    }
+
+    /* let payloadData = EbolaContract.methods.addPass("0x3132335000000000000000000000000000000000000000000000000000000000",
+      "0xe83589c48fb4e2b972921321c25e257ecc32a0b7").encodeABI();
+    web3.eth.getTransactionCount(account.publicKey).then(txCount => {
+      const txData = {
+        nonce: web3.utils.toHex(txCount),
+        gasLimit: web3.utils.toHex(250000),
+        gasPrice: web3.utils.toHex(10e3), // 10 Gwei
+        to: addr,
+        from: account.publicKey,
+        value: '0x00',
+        data: payloadData
+      }
+
+      // fire away!
+      this.sendSigned(txData, account.privateKey, web3, function (err, result) {
+        if (err) {
+          console.log('***Error ', err)
+
+        }
+        else {
+          console.log('***Sent', result)
+
+        }
+      })
+    }) */
+
+    EbolaContract.methods.getPasses().call({from:"0xe83589c48fb4e2b972921321c25e257ecc32a0b7"}).then(function (res) {
       console.log('ressssult')
       console.log(res)
-
-    }); */
+    });
   }
 }
