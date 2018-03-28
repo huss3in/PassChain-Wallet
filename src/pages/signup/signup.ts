@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
-import forge from 'node-forge';
+import { TabsPage } from '../tabs/tabs';
+// import forge from 'node-forge';
 import { Storage } from '@ionic/storage';
+import wallet from 'ethereumjs-wallet'
 
 @Component({
   selector: 'page-signup',
@@ -11,34 +13,29 @@ import { Storage } from '@ionic/storage';
 export class SignupPage {
 
   constructor(public navCtrl: NavController, public storage: Storage) {
-
+    this.storage.get('user').then((loggedUser) => {
+      console.log('ussss is')
+      console.log(loggedUser)
+      if (loggedUser != null) {
+        this.navCtrl.push(TabsPage, {})
+      }
+    })
   }
-  newUser = {}
-
-  generateKePair() {
-    var promise = new Promise((resolve, reject) => {
-      let rsa = forge.pki.rsa;
-      rsa.generateKeyPair({ bits: 2048, workers: 2 }, function (err, keypair) {
-        // keypair.privateKey, keypair.publicKey
-        resolve({
-          publicKey: forge.pki.publicKeyToPem(keypair.publicKey),
-          privateKey: forge.pki.privateKeyToPem(keypair.privateKey)
-        })
-      });
-    });
-    return promise
+  newUser = {
+    username: '',
+    password: ''
   }
 
   logForm() {
-    this.generateKePair().then((keyPair)=>{
-      this.storage.set('publicKey', keyPair.publicKey);
-      this.storage.set('privateKey', keyPair.privateKey);
-      this.storage.get('publicKey').then((val) => {
-        console.log(val);
-      });
-    })
-    
-
-    
+    let myWallet = wallet.generate();
+    let user = {
+      userName: this.newUser.username,
+      password: this.newUser.password,
+      address: myWallet.getAddressString(),
+      publicKey: myWallet.getPublicKeyString(),
+      privateKey: myWallet.getPrivateKeyString()
+    };
+    this.storage.set('user', user)
+    this.navCtrl.push(TabsPage, {})
   }
 }

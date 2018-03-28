@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { Storage } from '@ionic/storage';
+import { App,NavController } from 'ionic-angular';
+import { SignupPage } from '../signup/signup';
 
 @Component({
   selector: 'page-contact',
@@ -7,8 +9,11 @@ import { NavController } from 'ionic-angular';
 })
 export class ContactPage {
 
-  constructor(public navCtrl: NavController) {
-
+  constructor(public navCtrl: NavController, public app: App, public storage: Storage) {
+    console.log('logout loaded')
+    this.storage.set('user', null)
+    this.navCtrl.push(SignupPage, {})
+    this.app.getRootNav().setRoot(SignupPage);
   }
 
 }
